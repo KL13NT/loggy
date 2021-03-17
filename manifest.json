@@ -1,0 +1,14 @@
+{
+
+  "manifest_version": 2,
+  "name": "WebLogger",
+  "version": "0.0.1",
+
+  "description": "Logs your website visits.",
+
+	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "tabs"],
+
+	"background": {
+		"page": "src/background.html"
+	}
+}
