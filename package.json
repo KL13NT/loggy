@@ -1,0 +1,17 @@
+{
+  "name": "weblogger",
+  "version": "0.0.1",
+  "description": "Gain statistics on what websites you visit!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "web-ext run --firefox-profile=dev-edition-default",
+    "build": "web-ext build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kl13nt",
+  "license": "GPLv3-only",
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "prettier": "^2.2.1"
+  }
+}
