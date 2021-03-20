@@ -1,14 +1,19 @@
 {
-
-  "manifest_version": 2,
-  "name": "WebLogger",
-  "version": "0.0.1",
-
-  "description": "Logs your website visits.",
-
-	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "tabs"],
-
+	"manifest_version": 2,
+	"name": "Loggy",
+	"version": "0.0.1",
+	"description": "Gain insights on the time you spend online!",
+	"permissions": [
+		"<all_urls>",
+		"storage",
+		"unlimitedStorage",
+		"tabs"
+	],
+	"options_ui": {
+		"page": "dist/options.html",
+		"open_in_tab": true
+	},
 	"background": {
-		"page": "src/background.html"
+		"page": "dist/background.html"
 	}
 }

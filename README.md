@@ -1,6 +1,8 @@
 # Roadmap
-- listening and logging for websites
-- statistics menu
-- statistics charts
+- [x] listening and logging for websites
+- [x] log
+- [x] log sorting
+- log filtering
+- top 5 charts
 - settings page
-- ignore
+- ignore list

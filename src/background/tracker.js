@@ -1,13 +1,3 @@
-/**
- * There are a few things in mind for this
- * interval-based increment:
- * cons:
- * - difficult to implement
- * event-based:
- * const:
- * - won't log last tab before closing browser
- */
-
 import { Store } from "./store.js";
 
 const { tabs } = browser; /* || chrome */
@@ -64,6 +54,7 @@ export class Tracker {
         if (found) {
           found[year][month][day] += SYNC_TIME;
           found.lastVisit = new Date();
+          found.totalTime += SYNC_TIME;
 
           await this.store.set(this.tracking.origin, found);
         } else {
@@ -73,6 +64,7 @@ export class Tracker {
           website[year][month] = {};
           website[year][month][day] = SYNC_TIME;
 
+          website.totalTime = SYNC_TIME;
           website.lastVisit = new Date();
 
           await this.store.set(this.tracking.origin, website);
