@@ -7,6 +7,9 @@
         class="ml-4 px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 tracking-wider"
         v-model="search"
       />
+      <span class="ml-4 text-xs xs:text-sm text-gray-900">
+        Showing {{ history.length }} Entries
+      </span>
       <table class="min-w-full leading-normal mt-4">
         <thead>
           <tr>
@@ -14,6 +17,10 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="origin"
               v-on:click="sort"
+							v-on:keyup.enter="sort"
+							v-on:keyup.space="sort"
+              tabindex="0"
+              aria-label="sort by origin"
             >
               Origin
             </th>
@@ -21,6 +28,10 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="lastVisit"
               v-on:click="sort"
+							v-on:keyup.enter="sort"
+							v-on:keyup.space="sort"
+              tabindex="0"
+              aria-label="sort by last visit"
             >
               Last Visit
             </th>
@@ -28,6 +39,10 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="totalTime"
               v-on:click="sort"
+							v-on:keyup.enter="sort"
+							v-on:keyup.space="sort"
+              tabindex="0"
+              aria-label="sort by total time"
             >
               Total
             </th>

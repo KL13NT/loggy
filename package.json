@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "run-p dev:webpack dev:ext",
-    "dev:ext": "web-ext run --firefox-profile=dev-edition-default --start-url about:debugging --start-url about:addons --verbose",
+    "dev:ext": "web-ext run --firefox-profile=dev-edition-default --start-url about:debugging#/runtime/this-firefox --start-url about:addons --verbose",
     "dev:webpack": "webpack --config webpack.config.js --mode development --watch",
     "build": "run-s build:webpack build:ext",
     "build:ext": "web-ext build",
