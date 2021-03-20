@@ -75,8 +75,7 @@
 </template>
 
 <script>
-import { isValidDate } from "../utils.js";
-import humanizeDuration from "humanize-duration";
+import { isValidDate, compare, humanizeEntry } from "../utils.js";
 
 export default {
   name: "app",
@@ -104,39 +103,17 @@ export default {
           const keyA = a[this.sortby];
           const keyB = b[this.sortby];
 
-          if (this.ascending) {
-            console.log(keyA - keyB);
-            if (
-              this.sortby === "lastVisit" &&
-              isValidDate(keyA) &&
-              isValidDate(keyB)
-            )
-              return new Date(keyA) - new Date(keyB);
-            else return keyA < keyB ? -1 : 1;
-          } else {
-            if (
-              this.sortby === "lastVisit" &&
-              isValidDate(keyA) &&
-              isValidDate(keyB)
-            )
-              return new Date(keyB) - new Date(keyA);
-            else return keyB < keyA ? -1 : 1;
-          }
+          return compare(keyA, keyB, this.sortby, this.ascending);
         })
-        .map((entry) => ({
-          ...entry,
-          totalTime: humanizeDuration(entry.totalTime * 1000, { largest: 2 }),
-        }));
+        .map(humanizeEntry);
     },
   },
   methods: {
     sort: function (event) {
       const sortby = event.currentTarget.dataset.sortby;
 
-      console.log("current", this.sortby, this.ascending);
       this.ascending = this.sortby === sortby && !this.ascending;
       this.sortby = sortby;
-      console.log("new", this.sortby, this.ascending);
     },
   },
 };
