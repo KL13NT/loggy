@@ -41,5 +41,20 @@
     "preact": "^10.5.13",
     "tailwindcss": "^2.0.4",
     "vue": "^2.6.12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KL13NT/loggy.git"
+  },
+  "keywords": [
+    "vuejs",
+    "time",
+    "tracking",
+    "insights",
+    "tailwindcss"
+  ],
+  "bugs": {
+    "url": "https://github.com/KL13NT/loggy/issues"
+  },
+  "homepage": "https://github.com/KL13NT/loggy#readme"
 }

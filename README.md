@@ -2,8 +2,9 @@
 - [x] listening and logging for websites
 - [x] log
 - [x] log sorting
-- pagination
 - log filtering
+- - search by origin
+- pagination
 - top 5 charts
 - settings page
 - ignore list

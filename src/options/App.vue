@@ -1,7 +1,13 @@
 <template>
   <div class="px-4 sm:px-8 py-4 overflow-x-auto w-11/12 mx-auto">
-    <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-      <table class="min-w-full leading-normal">
+    <div class="inline-block min-w-full shadow rounded-lg overflow-hidden py-4">
+      <label class="ml-4">Search By Origin</label>
+      <input
+        type="text"
+        class="ml-4 px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 tracking-wider"
+        v-model="search"
+      />
+      <table class="min-w-full leading-normal mt-4">
         <thead>
           <tr>
             <th
@@ -84,6 +90,7 @@ export default {
       history: [],
       sortby: "totalTime",
       ascending: false,
+      search: "",
     };
   },
   mounted: async function () {
@@ -105,7 +112,11 @@ export default {
 
           return compare(keyA, keyB, this.sortby, this.ascending);
         })
-        .map(humanizeEntry);
+        .map(humanizeEntry)
+        .filter(
+          (entry) =>
+            (this.search && entry.origin.includes(this.search)) || !this.search,
+        );
     },
   },
   methods: {
