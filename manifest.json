@@ -1,10 +1,9 @@
 {
 	"manifest_version": 2,
 	"name": "Loggy",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Gain insights on the time you spend online!",
 	"permissions": [
-		"<all_urls>",
 		"storage",
 		"unlimitedStorage",
 		"tabs"

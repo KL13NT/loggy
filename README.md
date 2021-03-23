@@ -1,7 +1,8 @@
 # Loggy!
 
-![License](https://img.shields.io/github/license/kl13nt/loggy)
 ![GitHub issues](https://img.shields.io/github/issues-raw/kl13nt/loggy)
+![David](https://img.shields.io/david/kl13nt/loggy)
+![License](https://img.shields.io/github/license/kl13nt/loggy)
 
 Gain insights on the time you spend online! Loggy logs the time you spend on
 each website to beautifully give you insights on your internet habits when
