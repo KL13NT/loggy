@@ -10,10 +10,10 @@
 		"tabs"
 	],
 	"options_ui": {
-		"page": "dist/options.html",
+		"page": "options.html",
 		"open_in_tab": true
 	},
 	"background": {
-		"page": "dist/background.html"
+		"page": "background.html"
 	}
 }

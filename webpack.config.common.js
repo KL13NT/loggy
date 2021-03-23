@@ -1,14 +1,12 @@
 const path = require("path");
+const HTMLPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = {
-  devtool: "inline-source-map",
-
   entry: {
-    background: "./src/background/background.js",
-    options: "./src/options/options.js",
+    background: path.resolve(__dirname, "./src/background/background.js"),
+    options: path.resolve(__dirname, "./src/options/options.js"),
   },
 
   output: {
@@ -18,10 +16,7 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"],
-      },
+      // specify css rules
       {
         test: /\.vue$/,
         loader: "vue-loader",
@@ -38,23 +33,23 @@ module.exports = {
   },
 
   plugins: [
-    new HTMLWebpackPlugin({
+    new HTMLPlugin({
       filename: "options.html",
       chunks: ["options"],
-      template: "./static/options.html",
+      template: path.resolve(__dirname, "./static/options.html"),
     }),
-    new HTMLWebpackPlugin({
+    new HTMLPlugin({
       filename: "background.html",
       chunks: ["background"],
-      template: "./static/background.html",
+      template: path.resolve(__dirname, "./static/background.html"),
     }),
     new VueLoaderPlugin(),
+    new CopyPlugin({
+      patterns: [{ from: "./manifest.json", to: "./manifest.json" }],
+    }),
   ],
 
   resolve: {
-    alias: {
-      vue$: "vue/dist/vue.esm.js",
-    },
     extensions: ["*", ".js", ".vue", ".json"],
   },
 };

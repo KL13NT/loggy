@@ -17,8 +17,8 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="origin"
               v-on:click="sort"
-							v-on:keyup.enter="sort"
-							v-on:keyup.space="sort"
+              v-on:keyup.enter="sort"
+              v-on:keyup.space="sort"
               tabindex="0"
               aria-label="sort by origin"
             >
@@ -28,8 +28,8 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="lastVisit"
               v-on:click="sort"
-							v-on:keyup.enter="sort"
-							v-on:keyup.space="sort"
+              v-on:keyup.enter="sort"
+              v-on:keyup.space="sort"
               tabindex="0"
               aria-label="sort by last visit"
             >
@@ -39,8 +39,8 @@
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="totalTime"
               v-on:click="sort"
-							v-on:keyup.enter="sort"
-							v-on:keyup.space="sort"
+              v-on:keyup.enter="sort"
+              v-on:keyup.space="sort"
               tabindex="0"
               aria-label="sort by total time"
             >
