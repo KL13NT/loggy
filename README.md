@@ -1,7 +1,7 @@
 # Loggy!
 
-![GitHub issues](https://img.shields.io/github/issues-raw/kl13nt/loggy)
 ![License](https://img.shields.io/github/license/kl13nt/loggy)
+![GitHub issues](https://img.shields.io/github/issues-raw/kl13nt/loggy)
 
 Gain insights on the time you spend online! Loggy logs the time you spend on
 each website to beautifully give you insights on your internet habits when
@@ -30,7 +30,7 @@ I'm open to all kinds of contributions. If you want to:
 👩‍💻 Contribute to the code
 ```
 
-You are more than welcome. Before contributing, kindly check the [guidelines](./CONTRIBUTING.md).
+You are more than welcome. Before contributing, kindly check the [guidelines](./CONTRIBUTING.md). This repo follows a [code of conduct](/CODE_OF_CONDUCT.md).
 
 ## Roadmap
 
