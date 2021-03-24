@@ -17,8 +17,24 @@ PostCSS in the Webpack pipeline.
 
 ## Getting Started
 
-Install the addon from the [Mozilla Addons Store](https://addons.mozilla.org)
-and it'll start logging right away! If you wish to view your logs go to the addon's options.
+Install the addon from the [Mozilla Addons Store](https://addons.mozilla.org/en-US/firefox/addon/loggy/)
+and it'll start logging right away!
+
+#### Browser Action
+
+Upon installation the extension will show up in your browser's toolbar. Clicking
+it will show a popup with the top 5 websites you visited today alongside an
+approximation of the total time you spent browsing.
+
+![Browser Action Screenshot](./docs/browser-action.png)
+
+#### Full Log
+
+Clicking the `Visit full history` link in the browser action will take you to
+the full log that contains all websites since you installed the extension.
+You'll be able to search and sort the log.
+
+![Full Log Screenshot](./docs/full-log.png)
 
 ## ✋ Wish to Contribute?
 

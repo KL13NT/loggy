@@ -111,6 +111,8 @@ export default {
   mounted: async function () {
     const { data } = await browser.storage.local.get("data");
 
+    if (!data) return;
+
     this.history = Object.keys(data).map((key) => {
       return {
         origin: key,
