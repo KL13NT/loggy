@@ -33,12 +33,6 @@ I'm open to all kinds of contributions. If you want to:
 
 You are more than welcome. Before contributing, kindly check the [guidelines](./CONTRIBUTING.md). This repo follows a [code of conduct](/CODE_OF_CONDUCT.md).
 
-## Roadmap
-
-- Top 5 charts
-- Ignore list
-- Suggest features!
-
 ## License
 
 This projects is licensed under the GNU GPLv3 License.
