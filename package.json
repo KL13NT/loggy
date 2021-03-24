@@ -8,7 +8,7 @@
     "dev:ext": "web-ext run --firefox-profile=dev-edition-default --start-url about:debugging#/runtime/this-firefox --start-url about:addons --verbose",
     "dev:webpack": "webpack --config webpack.config.dev.js --watch --node-env=development",
     "build": "run-s build:webpack build:ext",
-    "build:ext": "web-ext build",
+    "build:ext": "web-ext build --overwrite-dest",
     "build:webpack": "webpack --config webpack.config.prod.js --node-env=production",
     "presign": "npm run build:webpack",
     "sign": "env-cmd web-ext sign",

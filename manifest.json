@@ -15,6 +15,14 @@
 	"background": {
 		"page": "background.html"
 	},
+	"browser_action": {
+		"default_icon": {
+			"19": "icons/icon.svg",
+			"38": "icons/icon.svg"
+		},
+		"default_title": "Loggy!",
+		"default_popup": "browser-action.html"
+		},
 	"icons": {
 		"32": "icons/icon.svg",
 		"48": "icons/icon.svg",
@@ -24,9 +32,7 @@
 	},
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "{ae04bc71-2f28-4ace-8a96-470334639b65}",
-			"strict_min_version":"70",
-			"strict_max_version":"*"
+			"id": "{ae04bc71-2f28-4ace-8a96-470334639b65}"
 		}
 	}
 }
