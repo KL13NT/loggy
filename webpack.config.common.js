@@ -7,6 +7,10 @@ module.exports = {
   entry: {
     background: path.resolve(__dirname, "./src/background/background.js"),
     options: path.resolve(__dirname, "./src/options/options.js"),
+    browserAction: path.resolve(
+      __dirname,
+      "./src/browser-action/browser-action.js",
+    ),
   },
 
   output: {
@@ -42,6 +46,11 @@ module.exports = {
       filename: "background.html",
       chunks: ["background"],
       template: path.resolve(__dirname, "./src/background.html"),
+    }),
+    new HTMLPlugin({
+      filename: "browser-action.html",
+      chunks: ["browserAction"],
+      template: path.resolve(__dirname, "./src/browser-action.html"),
     }),
     new VueLoaderPlugin(),
     new CopyPlugin({
