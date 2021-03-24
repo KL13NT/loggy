@@ -15,6 +15,16 @@ backed by Webpack to bundle the JavaScript and Vue templates into redistributabl
 that are ready to bundle into the extension xpi. Tailwind is compiled using
 PostCSS in the Webpack pipeline.
 
+## Permissions Breakdown
+Loggy requires very few permissions to work. These permissions relate to storing
+your history and monitoring the tabs you open/close.
+
+- Store unlimited amount of client-side data (`storage`, `unlimitedStorage`) is used for storing
+  website data. Its size is based on the number of websites you visit and how
+  long you spend on each so I had to use `unlimitedStorage` for it.
+- Access browser tabs (`tabs`) is used to get metadata about visited websites.
+  This permission cannot, in any way, grant access to your private data such as cookies.
+
 ## Getting Started
 
 Install the addon from the [Mozilla Addons Store](https://addons.mozilla.org/en-US/firefox/addon/loggy/)
