@@ -14,5 +14,12 @@
 	},
 	"background": {
 		"page": "background.html"
+	},
+	"icons": {
+		"32": "icons/icon.svg",
+		"48": "icons/icon.svg",
+		"64": "icons/icon.svg",
+		"96": "icons/icon.svg",
+		"128": "icons/icon.svg"
 	}
 }

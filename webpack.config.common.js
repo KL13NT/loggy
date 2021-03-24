@@ -36,16 +36,25 @@ module.exports = {
     new HTMLPlugin({
       filename: "options.html",
       chunks: ["options"],
-      template: path.resolve(__dirname, "./static/options.html"),
+      template: path.resolve(__dirname, "./src/options.html"),
     }),
     new HTMLPlugin({
       filename: "background.html",
       chunks: ["background"],
-      template: path.resolve(__dirname, "./static/background.html"),
+      template: path.resolve(__dirname, "./src/background.html"),
     }),
     new VueLoaderPlugin(),
     new CopyPlugin({
-      patterns: [{ from: "./manifest.json", to: "./manifest.json" }],
+      patterns: [
+        {
+          from: "./manifest.json",
+          to: "./manifest.json",
+        },
+        {
+          from: "./static",
+          to: path.resolve(__dirname, "./dist"),
+        },
+      ],
     }),
   ],
 
