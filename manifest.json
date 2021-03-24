@@ -21,5 +21,12 @@
 		"64": "icons/icon.svg",
 		"96": "icons/icon.svg",
 		"128": "icons/icon.svg"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{ae04bc71-2f28-4ace-8a96-470334639b65}",
+			"strict_min_version":"70",
+			"strict_max_version":"*"
+		}
 	}
 }

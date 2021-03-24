@@ -11,7 +11,10 @@
     "build:ext": "web-ext build",
     "build:webpack": "webpack --config webpack.config.prod.js --node-env=production",
     "presign": "npm run build:webpack",
-    "sign": "env-cmd web-ext sign"
+    "sign": "env-cmd web-ext sign",
+		"bump": "node bump.js",
+		"preversion": "run-s build",
+		"postversion": "run-s bump sign"
   },
   "webExt": {
     "sourceDir": "dist"
