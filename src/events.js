@@ -28,4 +28,7 @@ export default {
   TRACKING_0014: "A tab has been removed.",
   TRACKING_0015: "Removed tab is ignored.",
   TRACKING_0016: "Updating tracked tabId.",
+  TRACKING_0017: "Clearing interval.",
+  TRACKING_0018: "Starting new interval.",
+  TRACKING_0019: "Not tracking.",
 };

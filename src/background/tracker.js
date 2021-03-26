@@ -3,7 +3,7 @@ import { logger } from "../utils";
 const { tabs, windows } = browser; /* || chrome */
 const { info, error } = logger;
 
-const shouldSync = (state) => state.origin && state.focused;
+const shouldSync = (state) => state.tracking && state.origin && state.focused;
 
 export class Tracker {
   /**
@@ -21,9 +21,10 @@ export class Tracker {
     this.onActivated = this.onActivated.bind(this);
     this.onUpdated = this.onUpdated.bind(this);
     this.onRemoved = this.onRemoved.bind(this);
+    this.onFocusChanged = this.onFocusChanged.bind(this);
     this.resetTracking = this.resetTracking.bind(this);
     this.startTracking = this.startTracking.bind(this);
-    this.onFocusChanged = this.onFocusChanged.bind(this);
+    this.clearInterval = this.clearInterval.bind(this);
 
     tabs.onActivated.addListener(this.onActivated);
     tabs.onUpdated.addListener(this.onUpdated);
@@ -38,13 +39,16 @@ export class Tracker {
    */
   onFocusChanged(id) {
     if (id === windows.WINDOW_ID_NONE) {
-      info("FOCUS_0000");
+      info("FOCUS_0000", id);
+
+      this.resetTracking();
       this.state.focused = false;
     } else {
-      info("FOCUS_0001");
-      this.state.focused = true;
+      info("FOCUS_0001", id);
 
-      clearInterval(this.interval);
+      this.resetTracking();
+
+      this.state.focused = true;
       this.startTracking();
     }
   }
@@ -57,12 +61,14 @@ export class Tracker {
     info("TRACKING_0005");
 
     const SYNC_TIME = 5; // sync every 5 secs
+    this.state.tracking = true;
 
     this.interval = setInterval(async () => {
       try {
         if (!shouldSync(this.state)) {
           if (!this.state.focused) info("FOCUS_0002");
           else if (!this.state.origin) info("TRACKING_0000");
+          else if (!this.state.tracking) info("TRACKING_0019");
 
           return;
         }
@@ -104,21 +110,26 @@ export class Tracker {
         this.store.logError(err);
       }
     }, SYNC_TIME * 1000);
+
+    info("TRACKING_0018", this.interval);
+  }
+
+  clearInterval() {
+    info("TRACKING_0017", this.interval);
+    clearInterval(this.interval);
   }
 
   resetTracking() {
-    if (this.state.origin) {
-      this.state = {
-        id: 0,
-        origin: null,
-      };
+    this.state = {
+      ...this.state,
+      tracking: false,
+    };
 
-      clearInterval(this.interval);
-    }
+    this.clearInterval();
   }
 
   /**
-   * @param {browser.tabs._OnActivatedActiveInfo} info
+   * @param {browser.tabs._OnActivatedActiveInfo} activeInfo
    */
   async onActivated(activeInfo) {
     try {
@@ -141,10 +152,7 @@ export class Tracker {
         info("TRACKING_0008");
         this.resetTracking();
 
-        this.state = {
-          id,
-          origin: hostname,
-        };
+        this.state.origin = hostname;
 
         this.startTracking();
       } // reset on origin change
@@ -170,7 +178,7 @@ export class Tracker {
         return;
       }
 
-      const { url, id } = tab;
+      const { url } = tab;
 
       if (!url) {
         info("TRACKING_0012", tabId);
@@ -181,14 +189,13 @@ export class Tracker {
       const { hostname } = new URL(url);
 
       info("TRACKING_0013", tabId, hostname);
-      if (this.state.origin !== hostname) this.resetTracking(); // reset on origin change
+      if (this.state.origin !== hostname) {
+        this.resetTracking(); // reset on origin change
 
-      this.state = {
-        id,
-        origin: hostname,
-      };
+        this.state.origin = hostname;
 
-      this.startTracking();
+        this.startTracking();
+      }
     } catch (err) {
       error("ERR_0000", err);
       this.store.logError(err);
@@ -204,7 +211,7 @@ export class Tracker {
     try {
       info("TRACKING_0014", tabId);
 
-      if (!this.state.tabId === tabId) {
+      if (this.state.tabId !== tabId) {
         info("TRACKING_0015", tabId);
         return;
       }
