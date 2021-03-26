@@ -1,6 +1,6 @@
 {
   "name": "loggy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Gain insights on the time you spend online!",
   "main": "index.js",
   "scripts": {
@@ -13,8 +13,7 @@
     "presign": "npm run build:webpack",
     "sign": "env-cmd web-ext sign",
     "bump": "node bump.js",
-    "preversion": "run-s build",
-    "postversion": "run-s bump sign",
+    "postversion": "run-s bump build",
     "lint": "eslint --ext .js,.ts ./src --config .eslintrc.yml",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
