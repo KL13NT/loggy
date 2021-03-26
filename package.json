@@ -1,6 +1,6 @@
 {
   "name": "loggy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gain insights on the time you spend online!",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "author": "kl13nt",
   "license": "GPL-3.0-only",
   "devDependencies": {
-		"@babel/eslint-parser": "^7.12.13",
+    "@babel/eslint-parser": "^7.12.13",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-transform-react-jsx": "^7.12.17",
     "@babel/plugin-transform-runtime": "^7.13.10",
