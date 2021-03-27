@@ -85,15 +85,16 @@ export default {
     if (!data) return;
 
     const history = Object.keys(data)
-      .filter((key) => data[key][year][month][day]) // make sure to only display websites visited today
+      .filter((key) => Boolean(data?.[key]?.[year]?.[month]?.[day])) // make sure to only display websites visited today
       .map((key) => {
         return {
           origin: key,
           ...data[key],
-          totalTime: data[key][year][month][day],
         };
       })
-      .sort((a, b) => compare(a.totalTime, b.totalTime, "totalTime", false))
+      .sort((a, b) =>
+        compare(a[year][month][day], b[year][month][day], "totalTime", false),
+      )
       .slice(0, 5);
 
     this.history = history.map(humanizeEntry);
