@@ -98,14 +98,30 @@ export class Tracker {
 
           const website = found || {};
 
-          if (!website[year]) website[year] = {};
-          if (!website[year][month]) website[year][month] = {};
-          if (!isValidNumber(website[year][month][day]))
+          if (!website[year]) {
+            info("TRACKING_0020");
+            website[year] = {};
+          }
+
+          if (!website[year][month]) {
+            info("TRACKING_0021");
+            website[year][month] = {};
+          }
+
+          if (!isValidNumber(website[year][month][day])) {
+            info("TRACKING_0022");
             website[year][month][day] = SYNC_TIME;
+          }
 
-          if (!isValidNumber(website.totalTime)) website.totalTime = SYNC_TIME;
-          else website.totalTime += SYNC_TIME;
+          if (!isValidNumber(website.totalTime)) {
+            info("TRACKING_0023");
+            website.totalTime = SYNC_TIME;
+          } else {
+            info("TRACKING_0024");
+            website.totalTime += SYNC_TIME;
+          }
 
+          info("TRACKING_0025");
           website.lastVisit = new Date();
 
           await this.store.set(this.state.origin, website);

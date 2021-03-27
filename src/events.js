@@ -31,4 +31,10 @@ export default {
   TRACKING_0017: "Clearing interval.",
   TRACKING_0018: "Starting new interval.",
   TRACKING_0019: "Not tracking.",
+  TRACKING_0020: "No year found.",
+  TRACKING_0021: "No month found.",
+  TRACKING_0022: "Day invalid.",
+  TRACKING_0023: "totalTime invalid. Initializing.",
+  TRACKING_0024: "totalTime valid. Incrementing.",
+  TRACKING_0025: "Updating lastVisit.",
 };
