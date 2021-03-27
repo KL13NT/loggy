@@ -101,7 +101,7 @@ export class Tracker {
           if (!website[year]) website[year] = {};
           if (!website[year][month]) website[year][month] = {};
           if (!isValidNumber(website[year][month][day]))
-            website[year][month][day] = SYNC_TIME;
+            website[day] = SYNC_TIME;
 
           if (!isValidNumber(website.totalTime)) website.totalTime = SYNC_TIME;
           else website.totalTime += SYNC_TIME;
