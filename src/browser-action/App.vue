@@ -4,7 +4,9 @@
       <h1 class="text-xl text-center font-semibold text-gray-600">
         Daily Report
       </h1>
-      <p class="text-sm text-center font-semibold text-gray-600">{{ today }}</p>
+      <p class="text-sm text-center font-semibold text-gray-600">
+        {{ today.string }}
+      </p>
       <p class="text-sm text-center font-normal text-gray-600">
         You spent approximately {{ total }} browsing today
       </p>
@@ -37,7 +39,12 @@
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ entry.totalTime }}
+                  {{
+                    humanizeDuration(
+                      entry[today.year][today.month][today.day] * 1000,
+                      { largest: 2 },
+                    )
+                  }}
                 </p>
               </td>
             </tr>
@@ -66,20 +73,26 @@
 import humanizeDuration from "humanize-duration";
 import { isValidDate, compare, humanizeEntry, humanizeDate } from "../utils.js";
 
+const date = new Date();
+const year = date.getFullYear();
+const month = date.getMonth();
+const day = date.getDate();
+
 export default {
   name: "app",
   data: function () {
     return {
       history: [],
-      today: humanizeDate(new Date()),
+      today: {
+        string: humanizeDate(date),
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        day: date.getDate(),
+      },
       total: 0,
     };
   },
   mounted: async function () {
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth();
-    const day = new Date().getDate();
-
     const { data } = await browser.storage.local.get("data");
 
     if (!data) return;
@@ -99,11 +112,12 @@ export default {
 
     this.history = history.map(humanizeEntry);
 
-    const total = history.reduce((t, c) => t + c.totalTime, 0);
+    const total = history.reduce((t, c) => t + c[year][month][day], 0);
     this.total = humanizeDuration(total * 1000, { largest: 1 });
   },
   methods: {
     openOptionsPage: () => browser.runtime.openOptionsPage(),
+    humanizeDuration: (...args) => humanizeDuration(...args),
   },
 };
 </script>
