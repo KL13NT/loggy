@@ -98,8 +98,8 @@ export class Tracker {
 
           const website = found || {};
 
-          if (!isValidNumber(website[year])) website[year] = {};
-          if (!isValidNumber(website[year][month])) website[month] = {};
+          if (!website[year]) website[year] = {};
+          if (!website[year][month]) website[year][month] = {};
           if (!isValidNumber(website[year][month][day]))
             website[day] = SYNC_TIME;
 
