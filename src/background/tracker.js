@@ -82,7 +82,7 @@ export class Tracker {
         // fix for wasted updates
         const found = await this.store.get(this.state.origin);
 
-        if (found) {
+        if (typeof found?.[year]?.[month]?.[day] === "number") {
           info("TRACKING_0002", this.state.origin);
 
           found[year][month][day] += SYNC_TIME;
@@ -94,13 +94,15 @@ export class Tracker {
           info("TRACKING_0003", origin);
           info("TRACKING_0004", origin);
 
-          const website = {};
+          const website = found || {};
 
-          website[year] = {};
-          website[year][month] = {};
-          website[year][month][day] = SYNC_TIME;
+          if (!website[year]) website[year] = {};
+          if (!website[year][month]) website[month] = {};
+          if (!website[year][month][day]) website[day] = SYNC_TIME;
 
-          website.totalTime = SYNC_TIME;
+          if (!website.totalTime) website.totalTime = SYNC_TIME;
+          else website.totalTime += SYNC_TIME;
+
           website.lastVisit = new Date();
 
           await this.store.set(this.state.origin, website);
