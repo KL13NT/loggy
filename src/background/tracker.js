@@ -5,6 +5,8 @@ const { info, error } = logger;
 
 const shouldSync = (state) => state.tracking && state.origin && state.focused;
 
+const isValidNumber = (v) => typeof v === "number" && !isNaN(v);
+
 export class Tracker {
   /**
    *
@@ -82,7 +84,7 @@ export class Tracker {
         // fix for wasted updates
         const found = await this.store.get(this.state.origin);
 
-        if (typeof found?.[year]?.[month]?.[day] === "number") {
+        if (isValidNumber(found?.[year]?.[month]?.[day])) {
           info("TRACKING_0002", this.state.origin);
 
           found[year][month][day] += SYNC_TIME;
@@ -96,11 +98,12 @@ export class Tracker {
 
           const website = found || {};
 
-          if (!website[year]) website[year] = {};
-          if (!website[year][month]) website[month] = {};
-          if (!website[year][month][day]) website[day] = SYNC_TIME;
+          if (!isValidNumber(website[year])) website[year] = {};
+          if (!isValidNumber(website[year][month])) website[month] = {};
+          if (!isValidNumber(website[year][month][day]))
+            website[day] = SYNC_TIME;
 
-          if (!website.totalTime) website.totalTime = SYNC_TIME;
+          if (!isValidNumber(website.totalTime)) website.totalTime = SYNC_TIME;
           else website.totalTime += SYNC_TIME;
 
           website.lastVisit = new Date();
