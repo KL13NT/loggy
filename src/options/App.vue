@@ -44,6 +44,17 @@
             </th>
             <th
               class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+              data-sortby="firstVisit"
+              v-on:click="sort"
+              v-on:keyup.enter="sort"
+              v-on:keyup.space="sort"
+              tabindex="0"
+              aria-label="sort by first visit"
+            >
+              First Visit
+            </th>
+            <th
+              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
               data-sortby="lastVisit"
               v-on:click="sort"
               v-on:keyup.enter="sort"
@@ -77,6 +88,11 @@
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <p class="text-gray-900 whitespace-no-wrap">
+                {{ entry.firstVisit }}
+              </p>
+            </td>
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <p class="text-gray-900 whitespace-no-wrap">
                 {{ entry.lastVisit }}
               </p>
             </td>
@@ -100,7 +116,12 @@
 </template>
 
 <script>
-import { getFirstVisit, compare, humanizeEntry } from "../utils.js";
+import {
+  getFirstVisit,
+  compare,
+  humanizeEntry,
+  calcTotalTimeInRange,
+} from "../utils.js";
 
 export default {
   name: "app",
@@ -133,41 +154,33 @@ export default {
     dateFrom: () => this.date.dateFrom.toLocaleDateString("en-CA"),
     dateTo: () => this.date.dateTo.toLocaleDateString("en-CA"),
     sortedHistory: function () {
-      const dateFrom = new Date(this.date.dateFrom);
-      const dateTo = new Date(this.date.dateTo);
+      // handling for cleared inputs
+      const dateFrom = this.date.dateFrom
+        ? new Date(this.date.dateFrom)
+        : new Date(0);
+      const dateTo = this.date.dateTo ? new Date(this.date.dateTo) : new Date();
 
       return Array.from(this.history)
+        .filter(
+          (entry) =>
+            new Date(entry.lastVisit).getTime() >= dateFrom.getTime() &&
+            new Date(entry.firstVisit).getTime() <= dateTo.getTime(),
+        )
+        .filter(
+          (entry) =>
+            (this.search && entry.origin.includes(this.search)) || !this.search,
+        )
+        .map((entry) => ({
+          ...entry,
+          totalTime: calcTotalTimeInRange(entry, dateFrom, dateTo),
+        }))
         .sort((a, b) => {
           const keyA = a[this.sortby];
           const keyB = b[this.sortby];
 
           return compare(keyA, keyB, this.sortby, this.ascending);
         })
-        .map(humanizeEntry)
-        .filter(
-          (entry) =>
-            new Date(entry.firstVisit) >= dateFrom &&
-            new Date(entry.lastVisit) <= dateTo,
-        )
-        .filter(
-          (entry) =>
-            (this.search && entry.origin.includes(this.search)) || !this.search,
-        );
-      // .filter((entry) =>
-      //   Object.keys(entry)
-      //     .some((key) => Number(key) >= from.year)
-      //     .some((year) =>
-      //       Object.keys(entry[year])
-      //         .some((key) => Number(key) >= from.month)
-      //         .some((month) =>
-      //           Object.keys(entry[year][month]).some(
-      //             (key) => Number(key) >= from.day,
-      //           ),
-      //         ),
-      //     ),
-      // );
-      // entry?.[from.year]?.[from.month]?.[from.day] ||
-      // entry?.[to.year]?.[to.month]?.[to.day],
+        .map(humanizeEntry);
     },
   },
   methods: {

@@ -24,32 +24,36 @@ export class Store {
   }
 
   async init() {
-    if (process.env.NODE_ENV === "development") {
-      logger.info("STORE_0000");
+    try {
+      if (process.env.NODE_ENV === "development") {
+        logger.info("STORE_0000");
+
+        await browser.storage.local.set({
+          data: require("../../test/dummy-store.json"),
+        });
+      }
+
+      const { data } = await browser.storage.local.get("data");
+
+      // Fix for change in data format This piece of code runs only once after
+      // installation, populates the firstVisit key, and that's it We can then use
+      // firstVisit and lastVisit to filter based on date durations
+      Object.keys(data).forEach((origin) => {
+        console.log(origin, !data[origin].firstVisit);
+
+        if (!data[origin].firstVisit)
+          data[origin] = {
+            ...data[origin],
+            firstVisit: getFirstVisit(data[origin]),
+          };
+      });
 
       await browser.storage.local.set({
-        data: require("../../test/dummy-store.json"),
+        data,
       });
+    } catch (error) {
+      this.logError(error);
     }
-
-    const { data } = await browser.storage.local.get("data");
-
-    // Fix for change in data format This piece of code runs only once after
-    // installation, populates the firstVisit key, and that's it We can then use
-    // firstVisit and lastVisit to filter based on date durations
-    Object.keys(data).forEach((origin) => {
-      console.log(origin, !data[origin].firstVisit);
-
-      if (!data[origin].firstVisit)
-        data[origin] = {
-          ...data[origin],
-          firstVisit: getFirstVisit(data[origin]),
-        };
-    });
-
-    await browser.storage.local.set({
-      data,
-    });
   }
 
   /**
