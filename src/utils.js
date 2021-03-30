@@ -1,8 +1,29 @@
 import humanizeDuration from "humanize-duration";
 import events from "./events";
 
-export const isValidDate = (v) => {
-  typeof v === "string" && isNaN(new Date(v).valueOf());
+export const isValidDate = (v) =>
+  typeof v === "string" && !isNaN(new Date(v).valueOf());
+
+export const isValidNumber = (v) => typeof v === "number" && !isNaN(v);
+
+/**
+ *
+ * @param {import('./background/store.js').Entry} entry
+ */
+export const getFirstVisit = (entry) => {
+  const years = Object.keys(entry)
+    .filter((key) => isValidNumber(Number(key)))
+    .sort((a, b) => compare(a, b, null, true));
+
+  const months = Object.keys(entry[years[0]])
+    .filter((key) => isValidNumber(Number(key)))
+    .sort((a, b) => compare(a, b, null, true));
+
+  const days = Object.keys(entry[years[0]][months[0]])
+    .filter((key) => isValidNumber(Number(key)))
+    .sort((a, b) => compare(a, b, null, true));
+
+  return new Date(years[0], months[0], days[0]);
 };
 
 export const compare = (valA, valB, filter, ascending) => {

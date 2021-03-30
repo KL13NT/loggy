@@ -1,21 +1,15 @@
 /**
  * @typedef {object} Entry
  * @property {Date} lastVisit last visit date
+ * @property {Date} firstVisit first visit date
  * @property {object} schedule key is date, value is total time
  */
+
+import { getFirstVisit, logger } from "../utils";
 
 /**
  * @typedef {object} History
  * @property {Entry}
- */
-
-/**
- * /origin
- * /last visit: date
- * /schedule
- *  /2021-05-06: ms total
- *  /2021-05-07: ms total
- *  /2021-05-08: ms total
  */
 
 export class Store {
@@ -25,22 +19,44 @@ export class Store {
 
     this.get = this.get.bind(this);
     this.set = this.set.bind(this);
+
+    this.init();
   }
 
-  /**
-   * TODO: This will cause data inconsistency if users open more than 1 window
-   * at the same time since each will have a different local copy that isn't
-   * synced with the other windows. Replace it.
-   *
-   * You could change the tracking logic so that you track only the focused
-   * window as well. This would prevent race conditions.
-   */
+  async init() {
+    if (process.env.NODE_ENV === "development") {
+      logger.info("STORE_0000");
+
+      await browser.storage.local.set({
+        data: require("../../test/dummy-store.json"),
+      });
+    }
+
+    const { data } = await browser.storage.local.get("data");
+
+    // Fix for change in data format This piece of code runs only once after
+    // installation, populates the firstVisit key, and that's it We can then use
+    // firstVisit and lastVisit to filter based on date durations
+    Object.keys(data).forEach((origin) => {
+      console.log(origin, !data[origin].firstVisit);
+
+      if (!data[origin].firstVisit)
+        data[origin] = {
+          ...data[origin],
+          firstVisit: getFirstVisit(data[origin]),
+        };
+    });
+
+    await browser.storage.local.set({
+      data,
+    });
+  }
 
   /**
    * @param {string} origin
    */
   async get(origin) {
-    const data = (await browser.storage.local.get("data")).data;
+    const { data } = await browser.storage.local.get("data");
     return data ? data[origin] : undefined;
   }
 

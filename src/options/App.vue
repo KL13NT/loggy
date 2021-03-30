@@ -7,7 +7,25 @@
         class="ml-4 px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 tracking-wider"
         v-model="search"
       />
-      <span class="ml-4 text-xs xs:text-sm text-gray-900">
+
+      <label class="ml-4">From</label>
+      <input
+        type="date"
+        class="ml-4 px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 tracking-wider"
+        v-model="date.dateFrom"
+        v-on:change="validateDate"
+      />
+      <label class="ml-4">To</label>
+      <input
+        type="date"
+        class="ml-4 px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 tracking-wider"
+        v-model="date.dateTo"
+        v-on:change="validateDate"
+      />
+      <span v-if="error" class="ml-4 text-xs xs:text-sm text-red-900">
+        {{ error }}
+      </span>
+      <span v-else="error" class="ml-4 text-xs xs:text-sm text-gray-900">
         Showing {{ sortedHistory.length }} Entries
       </span>
       <table class="min-w-full leading-normal mt-4">
@@ -76,27 +94,13 @@
         <span class="text-xs xs:text-sm text-gray-900">
           Showing {{ sortedHistory.length }} Entries
         </span>
-        <!--
-        <div class="inline-flex mt-2 xs:mt-0">
-          <button
-            class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l"
-          >
-            Prev
-          </button>
-          <button
-            class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r"
-          >
-            Next
-          </button>
-        </div>
-				-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { isValidDate, compare, humanizeEntry } from "../utils.js";
+import { getFirstVisit, compare, humanizeEntry } from "../utils.js";
 
 export default {
   name: "app",
@@ -106,6 +110,11 @@ export default {
       sortby: "totalTime",
       ascending: false,
       search: "",
+      date: {
+        dateFrom: new Date().toLocaleDateString("en-CA"),
+        dateTo: new Date().toLocaleDateString("en-CA"),
+      },
+      error: null,
     };
   },
   mounted: async function () {
@@ -121,7 +130,12 @@ export default {
     });
   },
   computed: {
+    dateFrom: () => this.date.dateFrom.toLocaleDateString("en-CA"),
+    dateTo: () => this.date.dateTo.toLocaleDateString("en-CA"),
     sortedHistory: function () {
+      const dateFrom = new Date(this.date.dateFrom);
+      const dateTo = new Date(this.date.dateTo);
+
       return Array.from(this.history)
         .sort((a, b) => {
           const keyA = a[this.sortby];
@@ -132,8 +146,28 @@ export default {
         .map(humanizeEntry)
         .filter(
           (entry) =>
+            new Date(entry.firstVisit) >= dateFrom &&
+            new Date(entry.lastVisit) <= dateTo,
+        )
+        .filter(
+          (entry) =>
             (this.search && entry.origin.includes(this.search)) || !this.search,
         );
+      // .filter((entry) =>
+      //   Object.keys(entry)
+      //     .some((key) => Number(key) >= from.year)
+      //     .some((year) =>
+      //       Object.keys(entry[year])
+      //         .some((key) => Number(key) >= from.month)
+      //         .some((month) =>
+      //           Object.keys(entry[year][month]).some(
+      //             (key) => Number(key) >= from.day,
+      //           ),
+      //         ),
+      //     ),
+      // );
+      // entry?.[from.year]?.[from.month]?.[from.day] ||
+      // entry?.[to.year]?.[to.month]?.[to.day],
     },
   },
   methods: {
@@ -142,6 +176,17 @@ export default {
 
       this.ascending = this.sortby === sortby && !this.ascending;
       this.sortby = sortby;
+    },
+    validateDate: function (event) {
+      const dateFrom = new Date(this.date.dateFrom);
+      const dateTo = new Date(this.date.dateTo);
+
+      this.error = null;
+
+      if (dateFrom > dateTo)
+        this.error = "DateFrom must be less than or equal to DateTo";
+
+      if (this.error) event.preventDefault();
     },
   },
 };

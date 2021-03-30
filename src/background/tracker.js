@@ -1,4 +1,4 @@
-import { logger } from "../utils";
+import { getFirstVisit, logger } from "../utils";
 
 const { tabs, windows } = browser; /* || chrome */
 const { info, error } = logger;
@@ -54,10 +54,6 @@ export class Tracker {
       this.startTracking();
     }
   }
-
-  /**
-   * TODO: restart interval on context switch
-   */
 
   startTracking() {
     info("TRACKING_0005");
@@ -123,6 +119,11 @@ export class Tracker {
 
           info("TRACKING_0025");
           website.lastVisit = new Date();
+
+          if (!website.firstVisit) {
+            info("TRACKING_0026");
+            website.firstVisit = getFirstVisit(website);
+          }
 
           await this.store.set(this.state.origin, website);
         }
