@@ -41,12 +41,12 @@ export class Tracker {
    */
   onFocusChanged(id) {
     if (id === windows.WINDOW_ID_NONE) {
-      info("FOCUS_0000", id);
+      info("TRACKING_0026", id);
 
       this.resetTracking();
       this.state.focused = false;
     } else {
-      info("FOCUS_0001", id);
+      info("TRACKING_0027", id);
 
       this.resetTracking();
 
@@ -68,7 +68,7 @@ export class Tracker {
     this.interval = setInterval(async () => {
       try {
         if (!shouldSync(this.state)) {
-          if (!this.state.focused) info("FOCUS_0002");
+          if (!this.state.focused) info("TRACKING_0028");
           else if (!this.state.origin) info("TRACKING_0000");
           else if (!this.state.tracking) info("TRACKING_0019");
 
