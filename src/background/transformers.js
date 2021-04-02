@@ -63,6 +63,7 @@ const transformerFunctions = {
     return {
       history: transformed,
       settings: {},
+      errors: [],
       version: "1.0.0",
     };
   },

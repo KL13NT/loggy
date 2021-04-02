@@ -1,47 +1,19 @@
-/**
- * @typedef {object} Entry
- * @property {Date} lastVisit last visit date
- * @property {object} schedule key is date, value is total time
- */
-
-/**
- * @typedef {object} History
- * @property {Entry}
- */
-
-/**
- * /origin
- * /last visit: date
- * /schedule
- *  /2021-05-06: ms total
- *  /2021-05-07: ms total
- *  /2021-05-08: ms total
- */
+import { Logger } from "../utils";
 
 export class Store {
   constructor() {
-    /** @type {History} */
-    this.data = {};
-
     this.get = this.get.bind(this);
     this.set = this.set.bind(this);
   }
 
   /**
-   * TODO: This will cause data inconsistency if users open more than 1 window
-   * at the same time since each will have a different local copy that isn't
-   * synced with the other windows. Replace it.
-   *
-   * You could change the tracking logic so that you track only the focused
-   * window as well. This would prevent race conditions.
-   */
-
-  /**
    * @param {string} origin
    */
-  async get(origin) {
-    const data = (await browser.storage.local.get("data")).data;
-    return data ? data[origin] : undefined;
+  async getOrigin(origin) {
+    Logger.info("STORE_0001", origin);
+
+    const { history } = await browser.storage.local.get("history");
+    return history ? history[origin] : undefined;
   }
 
   /**
@@ -49,23 +21,29 @@ export class Store {
    * @param {string} origin
    * @param {Entry} value
    */
-  async set(origin, value) {
-    const data = (await browser.storage.local.get("data")).data || {}; // handle first run
+  async setOrigin(origin, value) {
+    Logger.info("STORE_0000", origin);
+
+    const { history } = await browser.storage.local.get("history");
 
     const modified = {
-      ...data,
+      ...history,
       [origin]: value,
     };
 
-    console.log("modified", modified);
-    return browser.storage.local.set({ data: modified });
+    return browser.storage.local.set({ history: modified });
   }
 
   /**
    * @param {Error} error
    */
-  async logError(error) {
-    const errors = (await browser.storage.local.get("errors")).errors || [];
-    await browser.storage.local.set({ errors: [...errors, error] });
+  async logError({ message }) {
+    Logger.error("STORE_0000", message);
+
+    const { errors } = await browser.storage.local.get("errors");
+
+    await browser.storage.local.set({
+      errors: [...errors, message],
+    });
   }
 }

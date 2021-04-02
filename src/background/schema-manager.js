@@ -1,5 +1,5 @@
 import { Datastore, Version } from "../types.d";
-import { logger } from "../utils";
+import { Logger } from "../utils";
 import { transformers } from "./transformers";
 
 export class SchemaManager {
@@ -14,7 +14,11 @@ export class SchemaManager {
 
   onReady = {
     addListener: (listener) => this.listeners.ready.push(listener),
-    invoke: () => this.listeners.ready.forEach((listener) => listener.call()),
+    invoke: () => {
+      Logger.info("SCHEMA_0004");
+
+      this.listeners.ready.forEach((listener) => listener.call(this));
+    },
   };
 
   /**
@@ -25,7 +29,7 @@ export class SchemaManager {
     try {
       if (details.reason !== "update") return;
 
-      logger.info("RUNTIME_0001");
+      Logger.info("RUNTIME_0001");
 
       const store = await browser.storage.local.get();
       const prev = new Version(store.version || "0.0.0");
@@ -37,8 +41,8 @@ export class SchemaManager {
         return;
       }
 
-      logger.info("SCHEMA_0000", Datastore.schema.validate(store).error);
-      logger.info("SCHEMA_0001");
+      Logger.info("SCHEMA_0000", Datastore.schema.validate(store).error);
+      Logger.info("SCHEMA_0001");
 
       const transformed = transformers
         .filter(({ version }) => this.compare(version, prev) === 1)
@@ -51,7 +55,7 @@ export class SchemaManager {
 
       this.onReady.invoke();
     } catch (error) {
-      logger.error("ERR_0000", error);
+      Logger.error("ERR_0000", error);
     }
   };
 
@@ -63,8 +67,8 @@ export class SchemaManager {
     try {
       if (details.reason !== "install") return;
 
-      logger.info("RUNTIME_0000");
-      logger.info("SCHEMA_0002");
+      Logger.info("RUNTIME_0000");
+      Logger.info("SCHEMA_0002");
 
       await browser.storage.local.set(new Datastore());
       this.onReady.invoke();

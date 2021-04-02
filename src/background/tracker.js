@@ -1,7 +1,7 @@
-import { logger } from "../utils";
+import { Logger } from "../utils";
 
 const { tabs, windows } = browser; /* || chrome */
-const { info, error } = logger;
+const { info, error } = Logger;
 
 const shouldSync = (state) => state.tracking && state.origin && state.focused;
 
@@ -82,16 +82,15 @@ export class Tracker {
         const day = new Date().getDate();
 
         // fix for wasted updates
-        const found = await this.store.get(this.state.origin);
+        const found = await this.store.getOrigin(this.state.origin);
 
         if (isValidNumber(found?.[year]?.[month]?.[day])) {
           info("TRACKING_0002", this.state.origin);
 
           found[year][month][day] += SYNC_TIME;
-          found.lastVisit = new Date();
           found.totalTime += SYNC_TIME;
 
-          await this.store.set(this.state.origin, found);
+          await this.store.setOrigin(this.state.origin, found);
         } else {
           info("TRACKING_0003", origin);
           info("TRACKING_0004", origin);
@@ -121,10 +120,7 @@ export class Tracker {
             website.totalTime += SYNC_TIME;
           }
 
-          info("TRACKING_0025");
-          website.lastVisit = new Date();
-
-          await this.store.set(this.state.origin, website);
+          await this.store.setOrigin(this.state.origin, website);
         }
       } catch (err) {
         error("ERR_0000", err);

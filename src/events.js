@@ -13,6 +13,12 @@ export default {
   SCHEMA_0000: "Datastore schema invalid.",
   SCHEMA_0001: "Updating datastore schema.",
   SCHEMA_0002: "Initializing datastore.",
+  SCHEMA_0003: "Attaching runtime SchemaManager listeners",
+  SCHEMA_0004: "Datastore validated",
+
+  STORE_0000: "Updating origin.",
+  STORE_0001: "Getting origin.",
+  STORE_0002: "Logging error.",
 
   TRACKING_0000: "Not tracking an origin.",
   TRACKING_0001: "Syncing.",

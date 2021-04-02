@@ -39,9 +39,8 @@ export class Entry {
   /**
    *
    * @param {string} origin
-   * @param {Date} firstVisit
-   * @param {Date} lastVisit
-   * @param {*} sessions
+   * @param {[Session]} sessions
+   * @param {number} totalTime
    */
   constructor(origin, sessions, totalTime) {
     this.origin = origin;
@@ -74,6 +73,7 @@ export class Version {
 export class Datastore {
   version = "1.0.0";
   history = {};
+  errors = [];
   settings = {};
 
   static schema = Joi.object({
@@ -81,6 +81,7 @@ export class Datastore {
     history: Joi.object()
       .pattern(Joi.string().hostname(), Entry.schema)
       .required(),
+    errors: Joi.array().items(Joi.string()).required(),
     settings: Joi.object().required(),
   });
 
