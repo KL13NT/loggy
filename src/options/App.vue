@@ -8,48 +8,35 @@
         v-model="search"
       />
       <span class="ml-4 text-xs xs:text-sm text-gray-900">
-        Showing {{ sortedHistory.length }} Entries
+        Showing {{ result.length }} Entries
       </span>
       <table class="min-w-full leading-normal mt-4">
         <thead>
           <tr>
             <th
-              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-              data-sortby="origin"
-              v-on:click="sort"
-              v-on:keyup.enter="sort"
-              v-on:keyup.space="sort"
-              tabindex="0"
-              aria-label="sort by origin"
+              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/3"
             >
               Origin
             </th>
             <th
-              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-              data-sortby="lastVisit"
-              v-on:click="sort"
-              v-on:keyup.enter="sort"
-              v-on:keyup.space="sort"
-              tabindex="0"
-              aria-label="sort by last visit"
+              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+            >
+              First Visit
+            </th>
+            <th
+              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
             >
               Last Visit
             </th>
             <th
-              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
-              data-sortby="totalTime"
-              v-on:click="sort"
-              v-on:keyup.enter="sort"
-              v-on:keyup.space="sort"
-              tabindex="0"
-              aria-label="sort by total time"
+              class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
             >
               Total
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="entry in sortedHistory" v-bind:key="entry.origin">
+          <tr v-for="entry in result" v-bind:key="entry.origin">
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div class="flex items-center">
                 <p class="text-gray-900 whitespace-no-wrap">
@@ -59,12 +46,19 @@
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <p class="text-gray-900 whitespace-no-wrap">
-                {{ entry.lastVisit }}
+                {{ humanizeDate(entry.sessions[0].date) }}
               </p>
             </td>
             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <p class="text-gray-900 whitespace-no-wrap">
-                {{ entry.totalTime }}
+                {{
+                  humanizeDate(entry.sessions[entry.sessions.length - 1].date)
+                }}
+              </p>
+            </td>
+            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <p class="text-gray-900 whitespace-no-wrap">
+                {{ humanizeDuration(entry.totalTime * 1000) }}
               </p>
             </td>
           </tr>
@@ -74,75 +68,11 @@
         class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between"
       >
         <span class="text-xs xs:text-sm text-gray-900">
-          Showing {{ sortedHistory.length }} Entries
+          Showing {{ result.length }} Entries
         </span>
-        <!--
-        <div class="inline-flex mt-2 xs:mt-0">
-          <button
-            class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l"
-          >
-            Prev
-          </button>
-          <button
-            class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r"
-          >
-            Next
-          </button>
-        </div>
-				-->
       </div>
     </div>
   </div>
 </template>
 
-<script>
-// import { isValidDate, compare, humanizeEntry } from "../utils.js";
-
-// export default {
-//   name: "app",
-//   data: function () {
-//     return {
-//       history: [],
-//       sortby: "totalTime",
-//       ascending: false,
-//       search: "",
-//     };
-//   },
-//   mounted: async function () {
-//     const { data } = await browser.storage.local.get("data");
-
-//     if (!data) return;
-
-//     this.history = Object.keys(data).map((key) => {
-//       return {
-//         origin: key,
-//         ...data[key],
-//       };
-//     });
-//   },
-//   computed: {
-//     sortedHistory: function () {
-//       return Array.from(this.history)
-//         .sort((a, b) => {
-//           const keyA = a[this.sortby];
-//           const keyB = b[this.sortby];
-
-//           return compare(keyA, keyB, this.sortby, this.ascending);
-//         })
-//         .map(humanizeEntry)
-//         .filter(
-//           (entry) =>
-//             (this.search && entry.origin.includes(this.search)) || !this.search,
-//         );
-//     },
-//   },
-//   methods: {
-//     sort: function (event) {
-//       const sortby = event.currentTarget.dataset.sortby;
-
-//       this.ascending = this.sortby === sortby && !this.ascending;
-//       this.sortby = sortby;
-//     },
-//   },
-//};
-</script>
+<script src="./App.js"></script>
