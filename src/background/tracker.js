@@ -84,16 +84,14 @@ export class Tracker {
         const indexKey = dateToIndexKey(today);
         const isIndexed = await this.indexStore.isOriginIndexed(
           indexKey,
-          origin,
+          this.state.origin,
         );
 
         if (found) {
           info("TRACKING_0002", this.state.origin);
 
           if (isIndexed) {
-            const session = found.sessions.find(
-              (session) => session.date.getTime() === today.getTime(),
-            );
+            const session = found.sessions[found.sessions.length - 1];
 
             info("TRACKING_0030", this.state.origin);
             info("TRACKING_0031", this.state.origin);
@@ -110,18 +108,18 @@ export class Tracker {
             found.totalTime += SYNC_TIME;
 
             await this.historyStore.set(this.state.origin, found);
-            await this.indexStore.set(indexKey, origin);
+            await this.indexStore.set(indexKey, this.state.origin);
           }
         } else {
-          info("TRACKING_0003", origin);
-          info("TRACKING_0004", origin);
+          info("TRACKING_0003", this.state.origin);
+          info("TRACKING_0004", this.state.origin);
 
           const sessions = [new Session(today, SYNC_TIME)];
 
           const website = new Entry(this.state.origin, sessions, SYNC_TIME);
 
-          await this.historyStore.setOrigin(this.state.origin, website);
-          await this.indexStore.set(indexKey, origin);
+          await this.historyStore.set(this.state.origin, website);
+          await this.indexStore.set(indexKey, this.state.origin);
         }
       } catch (err) {
         error("ERR_0000", err);

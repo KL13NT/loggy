@@ -96,53 +96,53 @@
 </template>
 
 <script>
-import { isValidDate, compare, humanizeEntry } from "../utils.js";
+// import { isValidDate, compare, humanizeEntry } from "../utils.js";
 
-export default {
-  name: "app",
-  data: function () {
-    return {
-      history: [],
-      sortby: "totalTime",
-      ascending: false,
-      search: "",
-    };
-  },
-  mounted: async function () {
-    const { data } = await browser.storage.local.get("data");
+// export default {
+//   name: "app",
+//   data: function () {
+//     return {
+//       history: [],
+//       sortby: "totalTime",
+//       ascending: false,
+//       search: "",
+//     };
+//   },
+//   mounted: async function () {
+//     const { data } = await browser.storage.local.get("data");
 
-    if (!data) return;
+//     if (!data) return;
 
-    this.history = Object.keys(data).map((key) => {
-      return {
-        origin: key,
-        ...data[key],
-      };
-    });
-  },
-  computed: {
-    sortedHistory: function () {
-      return Array.from(this.history)
-        .sort((a, b) => {
-          const keyA = a[this.sortby];
-          const keyB = b[this.sortby];
+//     this.history = Object.keys(data).map((key) => {
+//       return {
+//         origin: key,
+//         ...data[key],
+//       };
+//     });
+//   },
+//   computed: {
+//     sortedHistory: function () {
+//       return Array.from(this.history)
+//         .sort((a, b) => {
+//           const keyA = a[this.sortby];
+//           const keyB = b[this.sortby];
 
-          return compare(keyA, keyB, this.sortby, this.ascending);
-        })
-        .map(humanizeEntry)
-        .filter(
-          (entry) =>
-            (this.search && entry.origin.includes(this.search)) || !this.search,
-        );
-    },
-  },
-  methods: {
-    sort: function (event) {
-      const sortby = event.currentTarget.dataset.sortby;
+//           return compare(keyA, keyB, this.sortby, this.ascending);
+//         })
+//         .map(humanizeEntry)
+//         .filter(
+//           (entry) =>
+//             (this.search && entry.origin.includes(this.search)) || !this.search,
+//         );
+//     },
+//   },
+//   methods: {
+//     sort: function (event) {
+//       const sortby = event.currentTarget.dataset.sortby;
 
-      this.ascending = this.sortby === sortby && !this.ascending;
-      this.sortby = sortby;
-    },
-  },
-};
+//       this.ascending = this.sortby === sortby && !this.ascending;
+//       this.sortby = sortby;
+//     },
+//   },
+//};
 </script>

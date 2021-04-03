@@ -11,7 +11,7 @@ export class Session {
   duration = null;
 
   static schema = Joi.object({
-    date: Joi.number().required(),
+    date: Joi.date().required(),
     duration: Joi.number().required(),
   });
 
@@ -83,13 +83,11 @@ export class Datastore {
 
   static schema = Joi.object({
     version: Joi.string().pattern(/^\d+\.\d+\.\d+$/),
-    history: Joi.object()
-      .pattern(Joi.string().hostname(), Entry.schema)
-      .required(),
+    history: Joi.object().pattern(Joi.string(), Entry.schema).required(),
     errors: Joi.array().items(Joi.string()).required(),
     settings: Joi.object().required(),
     index: Joi.object()
-      .pattern(Joi.string(), Joi.array().items(Joi.string().hostname()))
+      .pattern(Joi.string(), Joi.array().items(Joi.string()))
       .required(),
   });
 

@@ -3,7 +3,7 @@ const common = require("./webpack.config.common");
 
 module.exports = merge(common, {
   mode: "development",
-  devtool: "eval",
+  devtool: false,
 
   module: {
     rules: [
