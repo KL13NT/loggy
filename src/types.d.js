@@ -1,7 +1,11 @@
 import Joi from "joi";
 
+/**
+ * @typedef {Object.<string, string[]>} Index
+ */
+
 export class Session {
-  /**@type {number} */
+  /**@type {Date} */
   date = null;
   /**@type {number} */
   duration = null;
@@ -27,7 +31,7 @@ export class Entry {
   origin = null;
   /**@type {number} */
   totalTime = 0;
-  /**@type {[Session]} */
+  /**@type {Session[]} */
   sessions = [];
 
   static schema = Joi.object({
@@ -39,7 +43,7 @@ export class Entry {
   /**
    *
    * @param {string} origin
-   * @param {[Session]} sessions
+   * @param {Session[]} sessions
    * @param {number} totalTime
    */
   constructor(origin, sessions, totalTime) {
@@ -75,6 +79,7 @@ export class Datastore {
   history = {};
   errors = [];
   settings = {};
+  index = {}; // date to array of visited links on that day
 
   static schema = Joi.object({
     version: Joi.string().pattern(/^\d+\.\d+\.\d+$/),
@@ -83,6 +88,9 @@ export class Datastore {
       .required(),
     errors: Joi.array().items(Joi.string()).required(),
     settings: Joi.object().required(),
+    index: Joi.object()
+      .pattern(Joi.string(), Joi.array().items(Joi.string().hostname()))
+      .required(),
   });
 
   constructor(store) {

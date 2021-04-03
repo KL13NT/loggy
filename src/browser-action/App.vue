@@ -58,46 +58,35 @@
       >
         View full history
       </a>
-      <!-- <a
-        href="#"
-        v-on:click="openSettingsPage"
-        class="text-sm text-center font-semibold text-gray-600 block mt-4"
-      >
-        Or go to settings
-      </a>-->
     </div>
   </div>
 </template>
 
 <script>
 import humanizeDuration from "humanize-duration";
-import { isValidDate, compare, humanizeEntry, humanizeDate } from "../utils.js";
+import { compare, humanizeDate } from "../utils.js";
+import { HistoryStore, IndexStore } from "../types.d";
 
-const date = new Date();
-const year = date.getFullYear();
-const month = date.getMonth();
-const day = date.getDate();
+const historyStore = new HistoryStore()
+const indexStore = new IndexStore()
+
+const today = new Date();
+today.setHours(0, 0, 0);
 
 export default {
   name: "app",
   data: function () {
     return {
       history: [],
-      today: {
-        string: humanizeDate(date),
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        day: date.getDate(),
-      },
+      today,
       total: 0,
     };
   },
   mounted: async function () {
-    const { data } = await browser.storage.local.get("data");
+    const { history, index } = await browser.storage.local.get();
+		const indexKey = dateToIndexKey(today)
 
-    if (!data) return;
-
-    const history = Object.keys(data)
+    this.history = Object.keys(history)
       .filter((key) => Boolean(data?.[key]?.[year]?.[month]?.[day])) // make sure to only display websites visited today
       .map((key) => {
         return {
@@ -108,9 +97,8 @@ export default {
       .sort((a, b) =>
         compare(a[year][month][day], b[year][month][day], "totalTime", false),
       )
-      .slice(0, 5);
-
-    this.history = history.map(humanizeEntry);
+      .slice(0, 5)
+			.map(humanizeEntry);
 
     const total = history.reduce((t, c) => t + c[year][month][day], 0);
     this.total = humanizeDuration(total * 1000, { largest: 1 });

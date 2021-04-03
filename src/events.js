@@ -17,7 +17,7 @@ export default {
   SCHEMA_0004: "Datastore validated",
 
   STORE_0000: "Updating origin.",
-  STORE_0001: "Getting origin.",
+  STORE_0001: "Updating index.",
   STORE_0002: "Logging error.",
 
   TRACKING_0000: "Not tracking an origin.",
@@ -49,4 +49,7 @@ export default {
   TRACKING_0026: "Focus changed. No windows are focused.",
   TRACKING_0027: "Focus moved to another window.",
   TRACKING_0028: "Browser not focused.",
+  TRACKING_0029: "Creating new session.",
+  TRACKING_0030: "Session found.",
+  TRACKING_0031: "Updating session.",
 };

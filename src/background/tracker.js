@@ -1,19 +1,21 @@
-import { Logger } from "../utils";
+import { Entry, Session } from "../types.d";
+import { dateToIndexKey, Logger } from "../utils";
+import { Store } from "./store";
 
 const { tabs, windows } = browser; /* || chrome */
 const { info, error } = Logger;
 
 const shouldSync = (state) => state.tracking && state.origin && state.focused;
 
-const isValidNumber = (v) => typeof v === "number" && !isNaN(v);
-
 export class Tracker {
   /**
-   *
-   * @param {import('./store').Store} store
+   * @param {object} param0
+   * @param {import('./store').HistoryStore} param0.historyStore
+   * @param {import('./store').IndexStore} param0.indexStore
    */
-  constructor(store) {
-    this.store = store;
+  constructor({ historyStore, indexStore }) {
+    this.historyStore = historyStore;
+    this.indexStore = indexStore;
     this.state = {
       tabId: 0,
       origin: null,
@@ -55,10 +57,6 @@ export class Tracker {
     }
   }
 
-  /**
-   * TODO: restart interval on context switch
-   */
-
   startTracking() {
     info("TRACKING_0005");
 
@@ -66,6 +64,7 @@ export class Tracker {
     this.state.tracking = true;
 
     this.interval = setInterval(async () => {
+      //TODO: update index
       try {
         if (!shouldSync(this.state)) {
           if (!this.state.focused) info("TRACKING_0028");
@@ -77,54 +76,56 @@ export class Tracker {
 
         info("TRACKING_0001", this.state.origin);
 
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth();
-        const day = new Date().getDate();
+        /**@type {import("../types.d").Entry} */
+        const found = await this.historyStore.get(this.state.origin);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        // fix for wasted updates
-        const found = await this.store.getOrigin(this.state.origin);
+        const indexKey = dateToIndexKey(today);
+        const isIndexed = await this.indexStore.isOriginIndexed(
+          indexKey,
+          origin,
+        );
 
-        if (isValidNumber(found?.[year]?.[month]?.[day])) {
+        if (found) {
           info("TRACKING_0002", this.state.origin);
 
-          found[year][month][day] += SYNC_TIME;
-          found.totalTime += SYNC_TIME;
+          if (isIndexed) {
+            const session = found.sessions.find(
+              (session) => session.date.getTime() === today.getTime(),
+            );
 
-          await this.store.setOrigin(this.state.origin, found);
+            info("TRACKING_0030", this.state.origin);
+            info("TRACKING_0031", this.state.origin);
+
+            session.duration += SYNC_TIME;
+            found.totalTime += SYNC_TIME;
+
+            await this.historyStore.set(this.state.origin, found);
+          } else {
+            info("TRACKING_0029", this.state.origin);
+
+            const session = new Session(today, SYNC_TIME);
+            found.sessions.push(session);
+            found.totalTime += SYNC_TIME;
+
+            await this.historyStore.set(this.state.origin, found);
+            await this.indexStore.set(indexKey, origin);
+          }
         } else {
           info("TRACKING_0003", origin);
           info("TRACKING_0004", origin);
 
-          const website = found || {};
+          const sessions = [new Session(today, SYNC_TIME)];
 
-          if (!website[year]) {
-            info("TRACKING_0020");
-            website[year] = {};
-          }
+          const website = new Entry(this.state.origin, sessions, SYNC_TIME);
 
-          if (!website[year][month]) {
-            info("TRACKING_0021");
-            website[year][month] = {};
-          }
-
-          if (!isValidNumber(website[year][month][day])) {
-            info("TRACKING_0022");
-            website[year][month][day] = SYNC_TIME;
-          }
-
-          if (!isValidNumber(website.totalTime)) {
-            info("TRACKING_0023");
-            website.totalTime = SYNC_TIME;
-          } else {
-            info("TRACKING_0024");
-            website.totalTime += SYNC_TIME;
-          }
-
-          await this.store.setOrigin(this.state.origin, website);
+          await this.historyStore.setOrigin(this.state.origin, website);
+          await this.indexStore.set(indexKey, origin);
         }
       } catch (err) {
         error("ERR_0000", err);
-        this.store.logError(err);
+        Store.logError(err);
       }
     }, SYNC_TIME * 1000);
 
@@ -176,7 +177,7 @@ export class Tracker {
       else info("TRACKING_0009", this.state.origin);
     } catch (err) {
       error("ERR_0000", err);
-      this.store.logError(err);
+      Store.logError(err);
     }
   }
 
@@ -215,7 +216,7 @@ export class Tracker {
       }
     } catch (err) {
       error("ERR_0000", err);
-      this.store.logError(err);
+      Store.logError(err);
     }
   }
 
@@ -237,7 +238,7 @@ export class Tracker {
       this.startTracking();
     } catch (err) {
       error("ERR_0000", err);
-      this.store.logError(err);
+      Store.logError(err);
     }
   }
 }

@@ -1,4 +1,5 @@
 import { Session, Version } from "../types.d";
+import { dateToIndexKey } from "../utils";
 
 class Transformer {
   /**@type {Version} */
@@ -21,6 +22,7 @@ class Transformer {
 const transformerFunctions = {
   "1.0.0": ({ data }) => {
     const transformed = {};
+    const index = {};
 
     Object.keys(data).forEach((origin) => {
       const entry = data[origin];
@@ -48,6 +50,10 @@ const transformerFunctions = {
 
                 totalTime += duration;
                 sessions.push(new Session(date, duration));
+
+                const indexKey = dateToIndexKey(date);
+                if (index[indexKey]) index[indexKey].push(origin);
+                else index[indexKey] = origin;
               }
             });
           });
@@ -62,6 +68,7 @@ const transformerFunctions = {
 
     return {
       history: transformed,
+      index,
       settings: {},
       errors: [],
       version: "1.0.0",
