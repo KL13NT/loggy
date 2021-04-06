@@ -1,32 +1,35 @@
-import humanizeDuration from "humanize-duration";
 import events from "./events";
 
-export const isValidDate = (v) => {
-  typeof v === "string" && isNaN(new Date(v).valueOf());
+export const isValidDate = (v) => v instanceof Date && !isNaN(v.getTime());
+
+/**
+ * @param {Date} date
+ */
+export const dateToIndexKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 };
 
-export const compare = (valA, valB, filter, ascending) => {
-  if (ascending)
-    if (filter === "lastVisit" && isValidDate(valA) && isValidDate(valB))
-      return new Date(valA) - new Date(valB);
-    else return valA < valB ? -1 : 1;
-  else if (filter === "lastVisit" && isValidDate(valA) && isValidDate(valB))
-    return new Date(valB) - new Date(valA);
-  else return valB < valA ? -1 : 1;
+/**
+ * @param {NumberLike} valA
+ * @param {NumberLike} valB
+ * @param {boolean} ascending
+ * @returns 1 if a is bigger, -1 if b bigger, 0 if equal
+ */
+export const compare = (a, b, ascending) => {
+  if (ascending) return a - b;
+  else return b - a;
 };
-
-const dateLocaleOptions = { dateStyle: "full" };
 
 export const humanizeDate = (date) =>
-  new Date(date).toLocaleString([], dateLocaleOptions);
+  new Date(date).toLocaleString([], {
+    dateStyle: "full",
+  });
 
-export const humanizeEntry = (entry) => ({
-  ...entry,
-  lastVisit: new Date(entry.lastVisit).toLocaleString([], dateLocaleOptions),
-  totalTime: humanizeDuration(entry.totalTime * 1000, { largest: 2 }),
-});
-
-export const logger = {
-  info: (msg, ...e) => console.info("[info]", events[msg], ...e),
-  error: (msg, ...e) => console.error("[error]", events[msg], ...e),
-};
+export class Logger {
+  static info = (msg, ...e) => console.info("[info]", events[msg], ...e);
+  static error = (msg, ...e) => console.error("[error]", events[msg], ...e);
+}

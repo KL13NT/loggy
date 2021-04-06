@@ -1,22 +1,12 @@
-// on start up
-// load settings
-// get all open tabs
-// add active tab to pool
-// start tabs listener
-
-import { Store } from "./store.js";
+import { SchemaManager } from "./schema-manager.js";
+import { HistoryStore, IndexStore } from "./store.js";
 import { Tracker } from "./tracker.js";
 
-// tabs listener
-// tabs.onCreated - add to pool
-// tabs.onActivated - change focus to another tab
-// tabs.onUpdated (url change) calculate time spent and remove from pool
-// tabs.onRemoved - calculate time spent and remove from pool
+const schemaManager = new SchemaManager();
 
-// inspiration
-// https://chrome.google.com/webstore/detail/webtime-tracker/ppaojnbmmaigjmlpjaldnkgnklhicppk
+schemaManager.onReady.addListener(() => {
+  const historyStore = new HistoryStore();
+  const indexStore = new IndexStore();
 
-(async function () {
-  const store = new Store();
-  new Tracker(store);
-})();
+  new Tracker({ historyStore, indexStore });
+});
