@@ -7,9 +7,18 @@
 export default {
   ERR_0000: "Something went wrong.",
 
-  FOCUS_0000: "Focus changed. No windows are focused.",
-  FOCUS_0001: "Focus moved to another window.",
-  FOCUS_0002: "Browser not focused.",
+  RUNTIME_0000: "Extension welcome.",
+  RUNTIME_0001: "Extension updated.",
+
+  SCHEMA_0000: "Datastore schema invalid.",
+  SCHEMA_0001: "Updating datastore schema.",
+  SCHEMA_0002: "Initializing datastore.",
+  SCHEMA_0003: "Attaching runtime SchemaManager listeners",
+  SCHEMA_0004: "Datastore validated",
+
+  STORE_0000: "Updating origin.",
+  STORE_0001: "Updating index.",
+  STORE_0002: "Logging error.",
 
   TRACKING_0000: "Not tracking an origin.",
   TRACKING_0001: "Syncing.",
@@ -37,4 +46,10 @@ export default {
   TRACKING_0023: "totalTime invalid. Initializing.",
   TRACKING_0024: "totalTime valid. Incrementing.",
   TRACKING_0025: "Updating lastVisit.",
+  TRACKING_0026: "Focus changed. No windows are focused.",
+  TRACKING_0027: "Focus moved to another window.",
+  TRACKING_0028: "Browser not focused.",
+  TRACKING_0029: "Creating new session.",
+  TRACKING_0030: "Session found.",
+  TRACKING_0031: "Updating session.",
 };
