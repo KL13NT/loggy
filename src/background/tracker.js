@@ -34,8 +34,6 @@ export class Tracker {
     tabs.onUpdated.addListener(this.onUpdated);
     tabs.onRemoved.addListener(this.onRemoved);
     windows.onFocusChanged.addListener(this.onFocusChanged);
-
-    this.startTracking();
   }
 
   /**
@@ -64,7 +62,6 @@ export class Tracker {
     this.state.tracking = true;
 
     this.interval = setInterval(async () => {
-      //TODO: update index
       try {
         if (!shouldSync(this.state)) {
           if (!this.state.focused) info("TRACKING_0028");

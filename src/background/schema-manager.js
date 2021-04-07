@@ -3,21 +3,31 @@ import { Logger } from "../utils";
 import { transformers } from "./transformers";
 
 export class SchemaManager {
-  listeners = {
-    ready: [],
-  };
-
   constructor() {
+    this.onReady.emit();
+
+    browser.runtime.onInstalled.addListener(() => this.onInstalled.emit()); // for stopping tracking until the schema is ready
     browser.runtime.onInstalled.addListener(this.updateListener);
     browser.runtime.onInstalled.addListener(this.installListener);
   }
 
   onReady = {
-    addListener: (listener) => this.listeners.ready.push(listener),
-    invoke: () => {
+    listeners: [],
+    addListener: (listener) => this.onReady.listeners.push(listener),
+    emit: () => {
       Logger.info("SCHEMA_0004");
 
-      this.listeners.ready.forEach((listener) => listener.call(this));
+      this.onReady.listeners.forEach((listener) => listener.call(this));
+    },
+  };
+
+  onInstalled = {
+    listeners: [],
+    addListener: (listener) => this.onInstalled.listeners.push(listener),
+    emit: () => {
+      Logger.info("SCHEMA_0004");
+
+      this.onInstalled.listeners.forEach((listener) => listener.call(this));
     },
   };
 

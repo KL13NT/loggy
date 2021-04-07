@@ -4,9 +4,14 @@ import { Tracker } from "./tracker.js";
 
 const schemaManager = new SchemaManager();
 
-schemaManager.onReady.addListener(() => {
-  const historyStore = new HistoryStore();
-  const indexStore = new IndexStore();
+const historyStore = new HistoryStore();
+const indexStore = new IndexStore();
+const tracker = new Tracker({ historyStore, indexStore });
 
-  new Tracker({ historyStore, indexStore });
+schemaManager.onInstalled.addListener(() => {
+  tracker.resetTracking();
+});
+
+schemaManager.onReady.addListener(() => {
+  tracker.startTracking();
 });
