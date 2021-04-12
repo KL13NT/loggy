@@ -5,6 +5,11 @@
  *  */
 
 export default {
+  MAIN_0000: "Development environment detected.",
+  MAIN_0001: "Production environment detected.",
+
+  STORE_0000: "Loading sample test store.",
+
   ERR_0000: "Something went wrong.",
 
   FOCUS_0000: "Focus changed. No windows are focused.",
@@ -37,4 +42,5 @@ export default {
   TRACKING_0023: "totalTime invalid. Initializing.",
   TRACKING_0024: "totalTime valid. Incrementing.",
   TRACKING_0025: "Updating lastVisit.",
+  TRACKING_0026: "Updating firstVisit.",
 };
